@@ -1,0 +1,27 @@
+{
+  "EN": {
+    "Col 3-p": {
+      "verses": [
+        {
+          "ref": "Col. 1:1",
+          "text": "Paul, an apostle of Christ Jesus through the will of God, and Timothy the brother,"
+        },
+        {
+          "ref": "Col. 1:2",
+          "text": "To the saints in Colossae and faithful brothers in Christ: Grace to you and peace from God our Father."
+        }
+      ],
+      "mode": "linear",
+      "last_index": 1,
+      "completed_linear": true,
+      "public": false,
+      "language": "EN",
+      "random_pass_indices_order": [
+        0,
+        1
+      ],
+      "random_pass_current_position": 2,
+      "random_pass_shown_count": 2
+    }
+  }
+}
