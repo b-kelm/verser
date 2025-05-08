@@ -23,5 +23,30 @@
       "random_pass_current_position": 2,
       "random_pass_shown_count": 2
     }
+  },
+  "DE": {
+    "Mt 16": {
+      "verses": [
+        {
+          "ref": "Matt. 16:18",
+          "text": "And I also say to you that you are Peter, and upon this rock I will build My church, and the gates of Hades shall not prevail against it."
+        },
+        {
+          "ref": "Matt. 16:19",
+          "text": "I will give to you the keys of the kingdom of the heavens, and whatever you bind on the earth shall have been bound in the heavens, and whatever you loose on the earth shall have been loosed in the heavens."
+        }
+      ],
+      "mode": "random",
+      "last_index": 0,
+      "completed_linear": true,
+      "public": false,
+      "language": "DE",
+      "random_pass_indices_order": [
+        0,
+        1
+      ],
+      "random_pass_current_position": 0,
+      "random_pass_shown_count": 0
+    }
   }
 }
