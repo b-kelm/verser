@@ -1,11 +1,11 @@
 {
   "Ben": {
     "password_hash": "$2b$12$F1AZsTQ6Vj5KtXYkU07BZ.LXyCqRLaVftEHZH.HaQ.jygXbxUDcTO",
-    "points": 400,
-    "team_id": "c92036d9-c3fc-4ab3-8f4c-4030637f99b5",
-    "learning_time_seconds": 66,
-    "total_verses_learned": 2,
-    "total_words_learned": 70
+    "points": 659,
+    "team_id": null,
+    "learning_time_seconds": 370,
+    "total_verses_learned": 20,
+    "total_words_learned": 329
   },
   "Arina": {
     "password_hash": "$2b$12$Ta7kQdLlFIpH5WYX/2lLJ.wkp0txm28y5po0zA0iEUbAazU1lT/ii",

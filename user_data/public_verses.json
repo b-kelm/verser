@@ -319,5 +319,155 @@
       "added_by": "Ben",
       "language": "EN"
     }
+  },
+  "DE": {
+    "Mt 1": {
+      "verses": [
+        {
+          "ref": "Matthäus 1:1",
+          "text": "Das Buch der Abstammung Jesu Christi, des Sohnes Davids, des Sohnes Abrahams:"
+        },
+        {
+          "ref": "Matthäus 1:2",
+          "text": "Abraham zeugte Isaak, und Isaak zeugte Jakob, und Jakob zeugte Juda und seine Brüder,"
+        },
+        {
+          "ref": "Matthäus 1:3",
+          "text": "und Juda zeugte Phares und Zara von der Thamar, und Phares zeugte Hesrom, und Hesrom zeugte Aram,"
+        },
+        {
+          "ref": "Matthäus 1:4",
+          "text": "und Aram zeugte Aminadab, und Aminadab zeugte Naasson, und Naasson zeugte Salmon,"
+        },
+        {
+          "ref": "Matthäus 1:5",
+          "text": "und Salmon zeugte Boas von der Rahab, und Boas zeugte Obed von der Ruth, und Obed zeugte Jesse,"
+        }
+      ],
+      "public": true,
+      "added_by": "Ben",
+      "language": "DE"
+    },
+    "Mt 1-s": {
+      "verses": [
+        {
+          "ref": "Matthäus 1:1",
+          "text": "Das Buch der Abstammung Jesu Christi, des Sohnes Davids, des Sohnes Abrahams:"
+        }
+      ],
+      "public": true,
+      "added_by": "Ben",
+      "language": "DE"
+    },
+    "Mt 1-sa": {
+      "verses": [
+        {
+          "ref": "Matthäus 1:1",
+          "text": "Das Buch der Abstammung Jesu Christi, des Sohnes Davids, des Sohnes Abrahams:"
+        }
+      ],
+      "public": true,
+      "added_by": "Ben",
+      "language": "DE"
+    },
+    "Eph 1": {
+      "verses": [
+        {
+          "ref": "Epheser 1:1",
+          "text": "Paulus, ein Apostel Christi Jesu durch den Willen Gottes, an die Heiligen, die in Ephesus sind und die treu sind in Christus Jesus:"
+        },
+        {
+          "ref": "Epheser 1:2",
+          "text": "Gnade euch und Friede von Gott, unserem Vater, und dem Herrn Jesus Christus."
+        },
+        {
+          "ref": "Epheser 1:3",
+          "text": "Gesegnet sei der Gott und Vater unseres Herrn Jesus Christus, der uns mit jedem geistlichen Segen gesegnet hat im Himmlischen in Christus,"
+        },
+        {
+          "ref": "Epheser 1:4",
+          "text": "So wie Er uns in Ihm vor Grundlegung der Welt auserwählt hat, damit wir heilig und makellos seien vor Ihm ein Liebe,"
+        },
+        {
+          "ref": "Epheser 1:5",
+          "text": "indem Er uns durch Jesus Christus für Sich zur Sohnschaft vorherbestimmt hat, nach dem Wohlgefallen Seines Willens,"
+        },
+        {
+          "ref": "Epheser 1:6",
+          "text": "zum Lobpreis der Herrlichkeit Seiner Gnade, mit der Er uns in dem Geliebten begnadet hat,"
+        },
+        {
+          "ref": "Epheser 1:7",
+          "text": "in Ihm haben wir die Erlösung durch Sein Blut, die Vergebung der Verfehlungen nach dem Reichtum Seiner Gnade,"
+        },
+        {
+          "ref": "Epheser 1:8",
+          "text": "die Er in aller Weisheit und Klugheit zu uns hat überströmen lassen,"
+        },
+        {
+          "ref": "Epheser 1:9",
+          "text": "indem Er uns das Geheimnis Seines Willens wissen ließ nach Seinem Wohlgefallen, das Er Sich in Sich Selbst vorgesetzt hat,"
+        },
+        {
+          "ref": "Epheser 1:10",
+          "text": "zur Ökonomie der Fülle der Zeiten, um in Christus alle Dinge aufzuhaupten, die Dinge in den Himmeln und die Dinge auf der Erde, in Ihm,"
+        },
+        {
+          "ref": "Epheser 1:11",
+          "text": "in dem wir auch als Erbteil bestimmt wurden, nachdem wir vorherbestimmt worden sind nach dem Vorsatz dessen, der alles nach dem Ratschluss Seines Willens wirkt,"
+        },
+        {
+          "ref": "Epheser 1:12",
+          "text": "damit wir zum Lobpreis Seiner Herrlichkeit seien, die wir zuerst auf Christus gehofft haben,"
+        },
+        {
+          "ref": "Epheser 1:13",
+          "text": "in dem auch ihr, nachdem ihr das Wort der Wahrheit, das Evangelium von eurer Errettung, gehört habt, auch an Ihn geglaubt habt, mit dem Heiligen Geist der Verheißung versiegelt worden seid,"
+        },
+        {
+          "ref": "Epheser 1:14",
+          "text": "der das Unterpfand unseres Erbteils ist zur Erlösung des erworbenen Besitzes, zum Lobpreis Seiner Herrlichkeit."
+        },
+        {
+          "ref": "Epheser 1:15",
+          "text": "Deswegen, auch ich, nachdem ich von dem Glauben an den Herrn Jesus gehört habe, der unter euch ist, und von eurer Liebe zu allen Heiligen,"
+        },
+        {
+          "ref": "Epheser 1:16",
+          "text": "höre ich nicht auf, für euch zu danken, wenn ich euch in meinen Gebeten erwähne,"
+        },
+        {
+          "ref": "Epheser 1:17",
+          "text": "dass der Gott unseres Herrn Jesus Christus, der Vater der Herrlichkeit, euch einen Geist der Weisheit und Offenbarung gebe in der völligen Erkenntnis Seiner Selbst,"
+        },
+        {
+          "ref": "Epheser 1:18",
+          "text": "nachdem die Augen eures Herzens erleuchtet worden sind, damit ihr wisst, was die Hoffnung Seiner Berufung ist, und was der Reichtum der Herrlichkeit Seines Erbteils in den Heiligen ist"
+        },
+        {
+          "ref": "Epheser 1:19",
+          "text": "und was die überragende Größe Seiner Kraft an, uns ist, die wir glauben, nach der Wirksamkeit der Macht Seiner Stärke,"
+        },
+        {
+          "ref": "Epheser 1:20",
+          "text": "die Er in Christus wirken ließ, als Er Ihn von den Toten auferweckte und Ihn zu Seiner Rechten niedersetzte im Himmlischen,"
+        },
+        {
+          "ref": "Epheser 1:21",
+          "text": "hoch über jedem Fürstentum und jeder Gewalt und Macht und Herrschaft und jedem Namen, der genannt wird, nicht nur in diesem Zeitalter, sondern auch in dem, das kommen soll;"
+        },
+        {
+          "ref": "Epheser 1:22",
+          "text": "und Er hat alles Seinen Füßen unterworfen und hat Ihm gegeben, Haupt über alles zu sein, der Gemeinde,"
+        },
+        {
+          "ref": "Epheser 1:23",
+          "text": "die Sein Leib ist, die Fülle dessen, der alles in allem erfüllt."
+        }
+      ],
+      "public": true,
+      "added_by": "Ben",
+      "language": "DE"
+    }
   }
 }
