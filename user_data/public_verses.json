@@ -468,6 +468,20 @@
       "public": true,
       "added_by": "Ben",
       "language": "DE"
+    },
+    "1 Joh 1-s": {
+      "verses": [
+        {
+          "ref": "Erste Johannes 1:1",
+          "text": "Was von Anfang an war, was wir gehört haben, was wir mit unseren Augen gesehen haben, was wir angeschaut und unsere Hände betastet haben, in Bezug auf das Wort des Lebens"
+        },
+        {
+          "ref": "Erste Johannes 1:2",
+          "text": "(und das Leben ist offenbar geworden, und wir haben gesehen und bezeugen und berichten euch das ewige Leben, das mit dem Vater war und uns offenbar gemacht worden ist);"
+        }
+      ],
+      "public": true,
+      "language": "DE"
     }
   }
 }

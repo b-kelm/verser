@@ -14,6 +14,7 @@ USER_DATA_DIR = "user_data"
 USERS_FILE = os.path.join(USER_DATA_DIR, "users.json")
 PUBLIC_VERSES_FILE = os.path.join(USER_DATA_DIR, "public_verses.json")
 TEAM_DATA_FILE = os.path.join(USER_DATA_DIR, "teams.json")
+ADMIN_PASSWORD = "bibelfeld" # Admin-Passwort
 
 MAX_CHUNKS = 8
 COLS_PER_ROW = 4
@@ -25,7 +26,7 @@ LANGUAGES = {
     "EN": "🇬🇧 English",
 }
 DEFAULT_LANGUAGE = "DE"
-PUBLIC_MARKER = "[P]"
+PUBLIC_MARKER = "[P]" # Für Texte, die nur öffentlich existieren und noch nicht kopiert wurden
 COMPLETED_MARKER = "✅"
 VERSE_EMOJI = "📖"
 
@@ -103,31 +104,33 @@ def get_user_verse_file(username_param):
     if not safe_username: safe_username = f"user_{random.randint(1000, 9999)}"
     return os.path.join(USER_DATA_DIR, f"{safe_username}_verses_v2.json")
 
-def load_user_verses(username_param, language_code_param):
+def load_user_verses(username_param, language_code_param): # Lädt private und kopierte öffentliche Texte
     filepath = get_user_verse_file(username_param)
     if os.path.exists(filepath):
         try:
             with open(filepath, "r", encoding='utf-8') as f: all_lang_data = json.load(f)
             lang_data = all_lang_data.get(language_code_param, {})
             for title, details in lang_data.items():
-                details['public'] = False; details['language'] = language_code_param
+                details['language'] = language_code_param # Sicherstellen
+                # 'public' Flag in user_verses ist jetzt eher 'is_copy_of_public' oder irrelevant,
+                # da alle Texte im User File für den User "privat" in der Behandlung sind.
+                # Wir können es auf False lassen oder ein `original_public_source: True` hinzufügen.
+                details.setdefault('public', False) # Kopien sind nicht mehr 'public' im Sinne der globalen Liste
+                
                 if details.get("mode") == "random":
                     text_specific_key_base = f"{language_code_param}_{title}"
                     details.setdefault("random_pass_indices_order", [])
                     details.setdefault("random_pass_current_position", 0)
                     details.setdefault("random_pass_shown_count", 0)
-                    # Load into session state only if not already present or different? 
-                    # For simplicity, load always, might override mid-session changes if not careful.
                     st.session_state[f'random_pass_indices_order_{text_specific_key_base}'] = details["random_pass_indices_order"]
                     st.session_state[f'random_pass_current_position_{text_specific_key_base}'] = details["random_pass_current_position"]
                     st.session_state[f'random_pass_shown_count_{text_specific_key_base}'] = details["random_pass_shown_count"]
             return lang_data
-        except (json.JSONDecodeError, IOError): st.warning(f"Private Versdatei für {username_param} korrupt."); return {}
+        except (json.JSONDecodeError, IOError): st.warning(f"Private Versdatei ({username_param}) korrupt."); return {}
     return {}
 
-def persist_current_private_text_progress(username_param, language_code_param, text_actual_title_to_save, text_details_to_save):
-    """Speichert die übergebenen text_details für einen spezifischen privaten Text."""
-    if text_details_to_save.get('public', False): return # Safety check
+def persist_user_text_progress(username_param, language_code_param, text_actual_title_to_save, text_details_to_save):
+    # Diese Funktion speichert einen bestimmten Text (privat oder Kopie eines öffentlichen) in der User-Datei
     user_verse_file = get_user_verse_file(username_param)
     all_user_verses_data = {}; lang_specific_data = {}
     if os.path.exists(user_verse_file):
@@ -136,7 +139,6 @@ def persist_current_private_text_progress(username_param, language_code_param, t
             lang_specific_data = all_user_verses_data.get(language_code_param, {})
         except (json.JSONDecodeError, IOError): pass 
     
-    # Update Random-Pass-Details aus Session State direkt vor dem Speichern
     if text_details_to_save.get("mode") == "random":
         text_specific_key_base = f"{language_code_param}_{text_actual_title_to_save}"
         text_details_to_save["random_pass_indices_order"] = st.session_state.get(f'random_pass_indices_order_{text_specific_key_base}', [])
@@ -148,9 +150,9 @@ def persist_current_private_text_progress(username_param, language_code_param, t
     try:
         with open(user_verse_file, "w", encoding='utf-8') as f:
             json.dump(all_user_verses_data, f, indent=2, ensure_ascii=False)
-    except IOError as e: st.error(f"Fehler beim Speichern des Fortschritts: {e}")
+    except IOError as e: st.error(f"Fehler beim Speichern des Fortschritts für '{text_actual_title_to_save}': {e}")
 
-def load_public_verses(language_code_param):
+def load_public_verses(language_code_param): # Lädt nur die globale Liste öffentlicher Texte
     if os.path.exists(PUBLIC_VERSES_FILE):
         try:
             with open(PUBLIC_VERSES_FILE, "r", encoding='utf-8') as f: all_lang_data = json.load(f)
@@ -160,13 +162,13 @@ def load_public_verses(language_code_param):
         except (json.JSONDecodeError, IOError): st.warning("Öffentliche Versdatei korrupt."); return {}
     return {}
 
-def save_public_verses(language_code_param, lang_specific_data_param):
+def save_public_verses(language_code_param, lang_specific_data_param): # Speichert in die globale Liste
     all_data = {};
     if os.path.exists(PUBLIC_VERSES_FILE):
         try:
             with open(PUBLIC_VERSES_FILE, "r", encoding='utf-8') as f: all_data = json.load(f)
         except (json.JSONDecodeError, IOError): pass
-    all_data[language_code_param] = {title: details for title, details in lang_specific_data_param.items() if details.get('public', False)}
+    all_data[language_code_param] = {title: details for title, details in lang_specific_data_param.items() if details.get('public', True)} # Sicherstellen, dass public=True
     try:
         with open(PUBLIC_VERSES_FILE, "w", encoding='utf-8') as f: json.dump(all_data, f, indent=2, ensure_ascii=False)
     except IOError as e: st.error(f"Fehler beim Speichern öffentlicher Verse: {e}")
@@ -220,12 +222,13 @@ def highlight_errors(selected_chunks_param, correct_chunks_param):
 
 # --- App Setup ---
 st.set_page_config(layout="wide", page_title="Vers-Lern-App")
-
-# --- Session State Initialisierung ---
 if "logged_in_user" not in st.session_state: st.session_state.logged_in_user = None
+if "admin_logged_in" not in st.session_state: st.session_state.admin_logged_in = False # NEU für Admin
+# ... (weitere Session State Initialisierungen) ...
 if "login_error" not in st.session_state: st.session_state.login_error = None
 if "register_error" not in st.session_state: st.session_state.register_error = None
 if "selected_language" not in st.session_state: st.session_state.selected_language = DEFAULT_LANGUAGE
+
 
 users = load_users(); teams = load_teams()
 
@@ -242,44 +245,47 @@ if st.session_state.logged_in_user:
         if session_title_key_logout in st.session_state:
             current_display_title_logout = st.session_state.get(session_title_key_logout)
             if current_display_title_logout:
-                _user_verses = load_user_verses(username, current_language_logout) # Load fresh before potential save
+                _user_verses = load_user_verses(username, current_language_logout)
                 _actual_title = current_display_title_logout.replace(f"{PUBLIC_MARKER} ", "").replace(f"{COMPLETED_MARKER} ", "")
-                if _actual_title in _user_verses and not _user_verses[_actual_title].get('public'):
-                    persist_current_private_text_progress(username, current_language_logout, _actual_title, _user_verses[_actual_title].copy())
+                if _actual_title in _user_verses: # Es muss im User-Profil sein (entweder privat oder kopiert öffentlich)
+                    persist_user_text_progress(username, current_language_logout, _actual_title, _user_verses[_actual_title].copy())
+        
         for key_to_clear in list(st.session_state.keys()): del st.session_state[key_to_clear]
         st.session_state.logged_in_user = None; st.session_state.selected_language = DEFAULT_LANGUAGE
+        st.session_state.admin_logged_in = False # Admin auch ausloggen
         st.rerun()
 
     # --- Sidebar Widgets ---
     with st.sidebar.expander("🤝 Teams", expanded=True):
+        # ... (Team UI - unverändert) ...
         user_team_id = user_data_global.get('team_id'); current_team_name = "Kein Team"
         if user_team_id and user_team_id in teams:
             current_team_name = teams[user_team_id].get('name', 'N/A')
             st.markdown(f"Team: **{current_team_name}** (`{teams[user_team_id].get('code')}`)")
-            if st.button("Verlassen", key="leave_team_btn_sb_v2"):
+            if st.button("Verlassen", key="leave_team_btn_sb_v4"):
                 old_team_id = users[username]['team_id']; users[username]['team_id'] = None
                 if old_team_id and old_team_id in teams and username in teams[old_team_id].get('members', []):
                     teams[old_team_id]['members'].remove(username)
                 save_users(users); save_teams(teams); st.success("Team verlassen."); st.rerun()
         else:
             st.markdown(f"Team: {current_team_name}")
-            st.write("Erstellen:"); new_team_name = st.text_input("Teamname", key="new_team_name_sb_v3")
-            if st.button("Ok", key="create_team_btn_sb_v3"):
+            st.write("Erstellen:"); new_team_name = st.text_input("Teamname", key="new_team_name_sb_v5")
+            if st.button("Ok", key="create_team_btn_sb_v5"):
                 if new_team_name:
                     team_id = str(uuid.uuid4()); team_code = generate_team_code()
                     teams[team_id] = {"name": new_team_name, "code": team_code, "members": [username], "points": 0}
                     users[username]['team_id'] = team_id; save_teams(teams); save_users(users)
                     st.success(f"'{new_team_name}' erstellt! Code: {team_code}"); st.rerun()
                 else: st.error("Name fehlt.")
-            st.write("Beitreten:"); join_code = st.text_input("Team-Code", key="join_code_sb_v3").upper()
-            if st.button("Ok", key="join_team_btn_sb_v3"):
+            st.write("Beitreten:"); join_code = st.text_input("Team-Code", key="join_code_sb_v5").upper()
+            if st.button("Ok", key="join_team_btn_sb_v5"):
                 found_id = next((tid for tid, tdata in teams.items() if tdata.get('code') == join_code), None)
                 if found_id:
                     users[username]['team_id'] = found_id
                     if username not in teams[found_id].get('members', []): teams[found_id]['members'].append(username)
                     save_users(users); save_teams(teams); st.success(f"'{teams[found_id]['name']}' beigetreten!"); st.rerun()
                 else: st.error("Code ungültig.")
-    
+
     with st.sidebar.expander("🏆 Leaderboard", expanded=False):
         display_leaderboard_in_sidebar(users, teams)
     
@@ -288,36 +294,72 @@ if st.session_state.logged_in_user:
         st.markdown(f"📖 Verse: {user_data_global.get('total_verses_learned', 0)}")
         st.markdown(f"✍️ Wörter: {user_data_global.get('total_words_learned', 0)}")
 
-    with st.sidebar.expander(f"📥 Text hinzufügen", expanded=False):
-        title = st.text_input("Titel", key=f"title_sb_v4_{st.session_state.selected_language}").strip()
-        text = st.text_area("Textinhalt", height=150, key=f"text_sb_v4_{st.session_state.selected_language}", help="Format: '1) Ref Text...' ODER 'Buch Kapt.\\n1 Text...'").strip()
-        public = st.checkbox("Öffentlich?", key=f"public_cb_v4_{st.session_state.selected_language}", value=False)
-        if st.button("Speichern", key=f"save_btn_sb_v4_{st.session_state.selected_language}"):
-            lang = st.session_state.selected_language
-            if not title: st.sidebar.error("Titel fehlt."); st.stop()
-            if not text: st.sidebar.error("Text fehlt."); st.stop()
-            if not is_format_likely_correct(text): st.sidebar.error(f"Format? [Hilfe](...)"); st.stop()
-            if contains_forbidden_content(text): st.sidebar.error("Inhalt? Prüfen."); st.stop()
-            try:
-                parsed = parse_verses_from_text(text)
-                if parsed:
-                    if public:
-                        _public = load_public_verses(lang)
-                        if title in _public: st.sidebar.error(f"Titel existiert."); st.stop()
-                        _public[title] = {"verses": parsed, "public": True, "added_by": username, "language": lang}
-                        save_public_verses(lang, _public); st.sidebar.success("Öffentlich gespeichert!"); st.rerun()
-                    else: 
-                        _private = load_user_verses(username, lang)
-                        if title in _private: st.sidebar.warning("Überschrieben.")
-                        _private[title] = {"verses": parsed, "mode": "linear", "last_index": 0, "completed_linear": False, "public": False, "language": lang}
-                        file = get_user_verse_file(username); all_data = {}
-                        if os.path.exists(file):
-                             with open(file, "r", encoding='utf-8') as f: all_data = json.load(f)
-                        all_data[lang] = _private
-                        with open(file, "w", encoding='utf-8') as f: json.dump(all_data, f, indent=2, ensure_ascii=False)
-                        st.sidebar.success("Privat gespeichert!"); st.rerun()
-                else: st.sidebar.error("Parsen fehlgeschlagen.")
-            except Exception as e: st.sidebar.error(f"Fehler: {e}")
+    # MODIFIED: "Öffentlich" Option entfernt, nur private Texte durch User
+    with st.sidebar.expander(f"📥 Eigenen Text hinzufügen", expanded=False):
+        new_title_sidebar = st.text_input("Titel", key=f"new_title_sidebar_v6_{st.session_state.selected_language}").strip()
+        new_text_sidebar = st.text_area("Textinhalt", height=150, key=f"new_text_sidebar_v6_{st.session_state.selected_language}", help="Format: '1) Ref Text...' ODER 'Buch Kapt.\\n1 Text...'").strip()
+        if st.button("Privaten Text speichern", key=f"save_btn_sidebar_v6_{st.session_state.selected_language}"):
+            current_lang_for_save = st.session_state.selected_language
+            if not new_title_sidebar: st.sidebar.error("Titel fehlt.")
+            elif not new_text_sidebar: st.sidebar.error("Text fehlt.")
+            elif not is_format_likely_correct(new_text_sidebar): st.sidebar.error(f"Format? [Hilfe](...)")
+            elif contains_forbidden_content(new_text_sidebar): st.sidebar.error("Inhalt? Prüfen.")
+            else:
+                try:
+                    parsed_verses = parse_verses_from_text(new_text_sidebar)
+                    if parsed_verses:
+                        _user_verses_private_sidebar = load_user_verses(username, current_lang_for_save)
+                        if new_title_sidebar in _user_verses_private_sidebar: st.sidebar.warning("Privater Text wird überschrieben.")
+                        _user_verses_private_sidebar[new_title_sidebar] = {"verses": parsed_verses, "mode": "linear", "last_index": 0, "completed_linear": False, "public": False, "language": current_lang_for_save}
+                        # Speichere alle privaten Texte für diese Sprache direkt in der User-Datei
+                        persist_user_text_progress(username, current_lang_for_save, new_title_sidebar, _user_verses_private_sidebar[new_title_sidebar])
+                        st.sidebar.success("Privater Text gespeichert!"); st.rerun()
+                    else: st.sidebar.error("Text konnte nicht geparsed werden (Format?).")
+                except Exception as e_sidebar: st.sidebar.error(f"Fehler: {e_sidebar}")
+
+    # NEU: Admin Bereich
+    with st.sidebar.expander("🔑 Admin", expanded=False):
+        if not st.session_state.admin_logged_in:
+            admin_pw_input = st.text_input("Admin-Passwort", type="password", key="admin_pw_input")
+            if st.button("Admin Login", key="admin_login_btn"):
+                if admin_pw_input == ADMIN_PASSWORD:
+                    st.session_state.admin_logged_in = True
+                    st.rerun()
+                else:
+                    st.error("Falsches Admin-Passwort.")
+        
+        if st.session_state.admin_logged_in:
+            st.success("Admin eingeloggt.")
+            st.subheader("Öffentlichen Bibeltext hinzufügen")
+            admin_new_title = st.text_input("Titel (öffentlich)", key="admin_new_title").strip()
+            admin_new_text = st.text_area("Textinhalt (öffentlich)", height=150, key="admin_new_text", help="Format: '1) Ref Text...' ODER 'Buch Kapt.\\n1 Text...'").strip()
+            admin_lang_options = list(LANGUAGES.keys())
+            admin_lang_display = [LANGUAGES[k] for k in admin_lang_options]
+            admin_selected_lang_idx = admin_lang_options.index(st.session_state.selected_language) if st.session_state.selected_language in admin_lang_options else 0
+            admin_selected_lang_display = st.selectbox("Sprache für öffentlichen Text", admin_lang_display, index=admin_selected_lang_idx, key="admin_lang_select")
+            admin_selected_lang_key = next(key for key, value in LANGUAGES.items() if value == admin_selected_lang_display)
+
+            if st.button("Öffentlichen Text speichern", key="admin_save_public_text"):
+                if not admin_new_title: st.error("Titel fehlt.")
+                elif not admin_new_text: st.error("Text fehlt.")
+                elif not is_format_likely_correct(admin_new_text): st.error("Format?")
+                # Keine Inhaltsprüfung für Admin? Oder doch? Vorerst nicht.
+                else:
+                    try:
+                        parsed_admin_verses = parse_verses_from_text(admin_new_text)
+                        if parsed_admin_verses:
+                            _public_verses_admin = load_public_verses(admin_selected_lang_key)
+                            if admin_new_title in _public_verses_admin: st.error(f"Öffentlicher Titel '{admin_new_title}' existiert.")
+                            else:
+                                _public_verses_admin[admin_new_title] = {"verses": parsed_admin_verses, "public": True, "language": admin_selected_lang_key}
+                                save_public_verses(admin_selected_lang_key, _public_verses_admin)
+                                st.success("Öffentlicher Text durch Admin gespeichert!"); 
+                                # Kein Rerun, damit Admin ggf. weitere Texte eingeben kann
+                        else: st.error("Text (Admin) konnte nicht geparsed werden.")
+                    except Exception as e_admin: st.error(f"Admin Fehler: {e_admin}")
+            if st.button("Admin Logout", key="admin_logout_btn"):
+                st.session_state.admin_logged_in = False
+                st.rerun()
     
     # --- Hauptbereich (Lernen) ---
     st.title("📖 Vers-Lern-App") 
@@ -325,31 +367,40 @@ if st.session_state.logged_in_user:
 
     with sel_col1: # Sprache
         lang_options = list(LANGUAGES.keys()); lang_display = [LANGUAGES[k] for k in lang_options]
-        idx_lang = lang_options.index(st.session_state.selected_language) # Sicherstellen, dass Index gültig ist
-        selected_lang_display = st.selectbox("Sprache", lang_display, index=idx_lang, key="main_lang_select_v5")
+        idx_lang = lang_options.index(st.session_state.selected_language)
+        selected_lang_display = st.selectbox("Sprache", lang_display, index=idx_lang, key="main_lang_select_v7")
         selected_lang_key = next(key for key, value in LANGUAGES.items() if value == selected_lang_display)
         if selected_lang_key != st.session_state.selected_language:
             old_lang = st.session_state.selected_language; old_title_key = f"selected_display_title_{old_lang}"
             if old_title_key in st.session_state:
                 old_title = st.session_state.get(old_title_key)
                 if old_title:
-                    _verses = load_user_verses(username, old_lang); _actual = old_title.replace(f"{PUBLIC_MARKER} ", "").replace(f"{COMPLETED_MARKER} ", "")
-                    if _actual in _verses and not _verses[_actual].get('public'): persist_current_private_text_progress(username, old_lang, _actual, _verses[_actual].copy())
+                    _user_verses = load_user_verses(username, old_lang)
+                    _actual = old_title.replace(f"{PUBLIC_MARKER} ", "").replace(f"{COMPLETED_MARKER} ", "")
+                    if _actual in _user_verses : # Nur speichern, wenn es im User-Profil ist
+                        persist_user_text_progress(username, old_lang, _actual, _user_verses[_actual].copy())
             st.session_state.selected_language = selected_lang_key
-            for k in list(st.session_state.keys()): # State Reset
-                if k not in ['logged_in_user', 'selected_language']: del st.session_state[k]
+            for k in list(st.session_state.keys()):
+                if k not in ['logged_in_user', 'selected_language', 'admin_logged_in']: del st.session_state[k]
             st.rerun()
 
     current_language = st.session_state.selected_language
-    user_verses_private = load_user_verses(username, current_language)
-    public_verses = load_public_verses(current_language)
+    user_verses_private = load_user_verses(username, current_language) # Enthält jetzt private und kopierte öffentliche
+    public_verses_global = load_public_verses(current_language) # Globale Liste für die Auswahl
+
     available_texts_map = {}; display_titles_list = []
+    # 1. Private (inkl. kopierte öffentliche) Texte des Nutzers
     for title, data in user_verses_private.items():
         prefix = f"{COMPLETED_MARKER} " if data.get("completed_linear", False) else ""
-        display_titles_list.append(f"{prefix}{title}"); available_texts_map[f"{prefix}{title}"] = {**data, 'source': 'private', 'original_title': title}
-    for title, data in public_verses.items():
-        display_titles_list.append(f"{PUBLIC_MARKER} {title}"); available_texts_map[f"{PUBLIC_MARKER} {title}"] = {**data, 'source': 'public', 'original_title': title}
-    sorted_display_titles = sorted(display_titles_list)
+        display_titles_list.append(f"{prefix}{title}"); 
+        available_texts_map[f"{prefix}{title}"] = {**data, 'source': 'user_profile', 'original_title': title} # Quelle ist jetzt 'user_profile'
+    # 2. Rein öffentliche Texte, die der Nutzer noch nicht in seinem Profil hat
+    for title, data in public_verses_global.items():
+        if title not in user_verses_private: # Nur anzeigen, wenn noch keine Kopie existiert
+             display_titles_list.append(f"{PUBLIC_MARKER} {title}"); 
+             available_texts_map[f"{PUBLIC_MARKER} {title}"] = {**data, 'source': 'public_global', 'original_title': title}
+    
+    sorted_display_titles = sorted(list(set(display_titles_list))) # set() zur Vermeidung von Duplikaten, falls Logik Fehler hat
 
     with sel_col2: # Text
         selected_display_title = None
@@ -359,77 +410,118 @@ if st.session_state.logged_in_user:
             old_display_title = st.session_state.get(session_title_key)
             current_idx = 0
             if old_display_title in sorted_display_titles: current_idx = sorted_display_titles.index(old_display_title)
-            elif sorted_display_titles: st.session_state[session_title_key] = sorted_display_titles[0] # Fallback wenn alter Titel weg ist
+            elif sorted_display_titles: st.session_state[session_title_key] = sorted_display_titles[0]
 
-            selected_display_title = st.selectbox("Bibeltext", sorted_display_titles, index=current_idx, key=f"main_selectbox_v5_{username}_{current_language}")
+            selected_display_title = st.selectbox("Bibeltext", sorted_display_titles, index=current_idx, key=f"main_selectbox_v7_{username}_{current_language}")
+            
+            # Logik zum Kopieren öffentlicher Texte ins Nutzerprofil beim ersten Auswählen
+            if selected_display_title and selected_display_title in available_texts_map:
+                selected_text_info_for_copy = available_texts_map[selected_display_title]
+                actual_title_for_copy = selected_text_info_for_copy['original_title']
+                
+                if selected_text_info_for_copy['source'] == 'public_global' and actual_title_for_copy not in user_verses_private:
+                    # st.info(f"'{actual_title_for_copy}' wird ins Profil kopiert...") # DEBUG
+                    copied_text_data = {
+                        "verses": selected_text_info_for_copy["verses"],
+                        "mode": "linear", "last_index": 0, "completed_linear": False,
+                        "public": False, # Ist jetzt eine "private" Kopie im User-File
+                        "original_public_source": True, # Markierung der Herkunft
+                        "language": current_language
+                    }
+                    user_verses_private[actual_title_for_copy] = copied_text_data
+                    persist_user_text_progress(username, current_language, actual_title_for_copy, copied_text_data)
+                    # Wichtig: UI muss aktualisiert werden, damit der Text jetzt als User-Text erscheint
+                    st.session_state[session_title_key] = actual_title_for_copy # Zeige den "unmarkierten" Titel an
+                    st.rerun() # Damit der Text neu geladen wird und ohne [P] erscheint
+
+
             if selected_display_title != old_display_title and old_display_title is not None:
                 if old_display_title in available_texts_map:
                     old_info = available_texts_map[old_display_title]
-                    if old_info['source'] == 'private':
+                    # Speichere Fortschritt des alten Textes, wenn er aus dem Nutzerprofil kam
+                    if old_info['source'] == 'user_profile':
                         old_actual = old_info['original_title']
-                        if old_actual in user_verses_private: persist_current_private_text_progress(username, current_language, old_actual, user_verses_private[old_actual].copy())
+                        if old_actual in user_verses_private: 
+                             persist_user_text_progress(username, current_language, old_actual, user_verses_private[old_actual].copy())
                 st.session_state[session_title_key] = selected_display_title
-                # State Reset Logik (vereinfacht)
-                for k in list(st.session_state.keys()):
-                    if k not in ['logged_in_user', 'selected_language', session_title_key]: del st.session_state[k]
+                for k in list(st.session_state.keys()): # State Reset
+                    if k not in ['logged_in_user', 'selected_language', session_title_key, 'admin_logged_in']: del st.session_state[k]
                 st.rerun()
             elif selected_display_title is not None and session_title_key not in st.session_state :
                  st.session_state[session_title_key] = selected_display_title
     
-    actual_title, is_public, total_verses, verses_learn, completed = None, False, 0, [], False # Umbenannt 'is_public_text', 'current_text_is_completed_linear'
-    selected_title = st.session_state.get(f"selected_display_title_{current_language}") # Immer den aktuellen Titel holen
+    actual_title, source_type, total_verses, verses_learn, completed = None, None, 0, [], False
+    selected_title = st.session_state.get(f"selected_display_title_{current_language}")
     if selected_title and selected_title in available_texts_map:
         info = available_texts_map[selected_title]
-        is_public = info['source'] == 'public'
+        source_type = info['source'] # 'user_profile' oder 'public_global'
         actual_title = info.get('original_title', selected_title.replace(f"{COMPLETED_MARKER} ", "").replace(f"{PUBLIC_MARKER} ", ""))
-        verses_learn = info.get("verses", []); total_verses = len(verses_learn)
-        if not is_public and actual_title in user_verses_private: completed = user_verses_private[actual_title].get("completed_linear", False)
+        
+        # Lerne immer aus user_verses_private, wenn vorhanden (d.h. es ist privat oder eine Kopie)
+        if actual_title in user_verses_private:
+            current_text_data_to_learn = user_verses_private[actual_title]
+            source_type = 'user_profile' # Überschreiben, da wir jetzt die User-Kopie nehmen
+        elif source_type == 'public_global' and actual_title in public_verses_global: # Fallback auf globale öffentliche Liste (sollte durch Kopierlogik selten sein)
+            current_text_data_to_learn = public_verses_global[actual_title]
+        else: # Sollte nicht passieren, wenn selected_title valide ist
+            current_text_data_to_learn = {}
+
+        verses_learn = current_text_data_to_learn.get("verses", []); total_verses = len(verses_learn)
+        if source_type == 'user_profile': # Completion-Status nur für Texte im User-Profil relevant
+            completed = current_text_data_to_learn.get("completed_linear", False)
+
 
     with sel_col3: # Modus
         opts = {"linear": "Linear", "random": "Zufällig"}; display_opts = list(opts.values())
         default = "linear"; mode = default
         if selected_title and actual_title:
-            if not is_public and actual_title in user_verses_private: default = user_verses_private[actual_title].get("mode", "linear")
+            current_text_for_mode = user_verses_private.get(actual_title) if actual_title in user_verses_private else {}
+            default = current_text_for_mode.get("mode", "linear") if current_text_for_mode else "linear"
+                
             key = f"selected_mode_{current_language}_{selected_title}"; old_mode = st.session_state.get(key)
             if key not in st.session_state: st.session_state[key] = default
-            current = opts.get(st.session_state[key], opts["linear"])
-            selected = st.selectbox("Modus", display_opts, index=display_opts.index(current), key=f"mode_sel_v5_{username}_{current_language}_{selected_title}")
-            internal = next(k for k, v in opts.items() if v == selected)
-            if internal != old_mode and old_mode is not None :
-                 st.session_state[key] = internal
-                 if not is_public and actual_title in user_verses_private:
-                     details = user_verses_private[actual_title].copy(); details["mode"] = internal
-                     if internal == "random": # Reset random state on switch TO random
+            current_mode_display = opts.get(st.session_state[key], opts["linear"]) # Sicherer Zugriff
+            selected_display = st.selectbox("Modus", display_opts, index=display_opts.index(current_mode_display), key=f"mode_sel_v7_{username}_{current_language}_{selected_title}")
+            internal_mode = next(k for k, v in opts.items() if v == selected_display)
+            if internal_mode != old_mode and old_mode is not None :
+                 st.session_state[key] = internal_mode
+                 if actual_title in user_verses_private: # Modus wird nur für Texte im Userprofil gespeichert
+                     details = user_verses_private[actual_title].copy(); details["mode"] = internal_mode
+                     if internal_mode == "random":
                          rand_key = f"{current_language}_{actual_title}"
                          st.session_state[f'random_pass_indices_order_{rand_key}'] = random.sample(range(total_verses), total_verses) if total_verses > 0 else []
                          st.session_state[f'random_pass_current_position_{rand_key}'] = 0; st.session_state[f'random_pass_shown_count_{rand_key}'] = 0
-                     persist_current_private_text_progress(username, current_language, actual_title, details)
-                 # State Reset Logik (vereinfacht)
+                     persist_user_text_progress(username, current_language, actual_title, details)
+                 # State Reset
                  for k in list(st.session_state.keys()):
-                     if k not in ['logged_in_user', 'selected_language', f"selected_display_title_{current_language}", key]: del st.session_state[k]
+                     if k not in ['logged_in_user', 'selected_language', f"selected_display_title_{current_language}", key, 'admin_logged_in']: del st.session_state[k]
                  st.rerun()
             mode = st.session_state.get(key, default)
     
     idx = 0; idx_key = f"current_verse_index_{current_language}_{selected_title}"
     if selected_title and total_verses > 0 and actual_title:
+        # ... (idx Bestimmung - wie zuvor, aber sicherstellen, dass 'user_verses_private' für 'completed' und 'last_index' verwendet wird, wenn Text dort ist) ...
+        current_text_for_idx = user_verses_private.get(actual_title) if actual_title in user_verses_private else {}
         if mode == 'linear':
             start = 0
-            if not is_public and actual_title in user_verses_private:
-                details = user_verses_private[actual_title]; is_comp = details.get("completed_linear", False)
+            if current_text_for_idx: # Text ist im User-Profil (privat oder kopiert öffentlich)
+                is_comp = current_text_for_idx.get("completed_linear", False)
                 if is_comp:
                     msg_key = f"completed_msg_shown_{current_language}_{actual_title}"
                     if not st.session_state.get(msg_key, False):
                         st.success("Super Big Amen! Text abgeschlossen."); st.session_state[msg_key] = True
                     start = 0 
                 else:
-                    start = details.get("last_index", 0)
+                    start = current_text_for_idx.get("last_index", 0)
                     msg_key_else = f"completed_msg_shown_{current_language}_{actual_title}"
                     if msg_key_else in st.session_state: del st.session_state[msg_key_else]
-            else: start = st.session_state.get(idx_key, 0)
+            else: # Rein öffentlicher Text, der noch nicht kopiert wurde (sollte selten sein durch Kopierlogik)
+                start = st.session_state.get(idx_key, 0) # Session-basierter Index für rein öffentliche
             idx = st.session_state.get(idx_key, start)
             idx = max(0, min(idx, total_verses - 1)) if total_verses > 0 else 0
             st.session_state[idx_key] = idx
         elif mode == 'random':
+            # ... (Random idx Logik - unverändert) ...
             rand_key = f"{current_language}_{actual_title}"
             if f'random_pass_indices_order_{rand_key}' not in st.session_state or \
                (not st.session_state.get(f'random_pass_indices_order_{rand_key}') and total_verses > 0) :
@@ -437,44 +529,50 @@ if st.session_state.logged_in_user:
                 st.session_state[f'random_pass_current_position_{rand_key}'] = 0; st.session_state[f'random_pass_shown_count_{rand_key}'] = 0
             pos = st.session_state.get(f'random_pass_current_position_{rand_key}', 0)
             order = st.session_state.get(f'random_pass_indices_order_{rand_key}', [])
-            if pos >= len(order) and total_verses > 0 :
-                order = random.sample(range(total_verses), total_verses)
-                st.session_state[f'random_pass_indices_order_{rand_key}'] = order; pos = 0
+            if pos >= len(order) and total_verses > 0 : # Pass Ende oder leere Liste
+                order = random.sample(range(total_verses), total_verses); pos = 0
+                st.session_state[f'random_pass_indices_order_{rand_key}'] = order
                 st.session_state[f'random_pass_current_position_{rand_key}'] = 0; st.session_state[f'random_pass_shown_count_{rand_key}'] = 0
             idx = order[pos] if order and pos < len(order) else 0 
             st.session_state[idx_key] = idx
 
+
+    # --- Fortschrittsbalken ---
     if selected_title and total_verses > 0 and actual_title:
-        if mode == 'linear' and completed:
-            progress_html = """<div style="background-color: #e6ffed;border:1px solid #b3e6c5;border-radius:5px;padding:2px;margin-bottom:5px;"><div style="background-color:#4CAF50;width:100%;height:10px;border-radius:3px;"></div></div><div style="text-align:center;font-size:0.9em;color:#4CAF50;">Abgeschlossen!</div>"""
+        progress_bar_completed_ui = False
+        # 'completed' bezieht sich auf den Status im user_verses_private (für private und kopierte öffentliche)
+        if mode == 'linear' and completed: progress_bar_completed_ui = True
+        
+        if progress_bar_completed_ui:
+            progress_html = """<div style="background-color:#e6ffed;border:1px solid #b3e6c5;border-radius:5px;padding:2px;margin-bottom:5px;"><div style="background-color:#4CAF50;width:100%;height:10px;border-radius:3px;"></div></div><div style="text-align:center;font-size:0.9em;color:#4CAF50;">Abgeschlossen!</div>"""
             st.markdown(progress_html, unsafe_allow_html=True)
         elif mode == 'linear':
             st.progress((idx + 1) / total_verses if total_verses > 0 else 0, text=f"Linear: {idx + 1}/{total_verses}")
         elif mode == 'random':
-            rand_key = f"{current_language}_{actual_title}"; num_shown = min(st.session_state.get(f'random_pass_shown_count_{rand_key}', 0), total_verses)
-            st.progress(num_shown / total_verses if total_verses > 0 else 0, text=f"Zufällig: {num_shown}/{total_verses}")
+            rand_key_pb = f"{current_language}_{actual_title}"; num_shown_pb = min(st.session_state.get(f'random_pass_shown_count_{rand_key_pb}', 0), total_verses)
+            st.progress(num_shown_pb / total_verses if total_verses > 0 else 0, text=f"Zufällig: {num_shown_pb}/{total_verses}")
     
+    # --- Lernlogik ---
     if selected_title and verses_learn and total_verses > 0 and actual_title:
+        # ... (Lernlogik, aber mit angepasster Persistenz und Auto-Advance) ...
         if not (0 <= idx < total_verses): idx = 0 
         if total_verses == 0 and idx == 0 : st.info("Keine Verse."); st.stop()
         verse = verses_learn[idx]; tokens = verse.get("text", "").split(); chunks = group_words_into_chunks(tokens); n_chunks = len(chunks)
         if not tokens or not chunks:
              st.warning(f"Vers '{verse.get('ref', '')}' leer/ungültig.")
-             if st.button("Nächsten laden", key=f"skip_v5_{idx}"): st.rerun() # Einfaches Rerun löst nächste Index-Bestimmung aus
+             if st.button("Nächsten laden", key=f"skip_v7_{idx}"): st.rerun()
         else: 
-            key = f"{current_language}_{actual_title}_{verse.get('ref', idx)}"
-            if f"s_chunks_{key}" not in st.session_state or st.session_state.get("current_ref") != verse.get("ref"):
-                st.session_state[f"s_chunks_{key}"] = random.sample(chunks, n_chunks); st.session_state[f"sel_chunks_{key}"] = []
-                st.session_state[f"used_chunks_{key}"] = [False]*n_chunks; st.session_state[f"feedback_{key}"] = False
-                st.session_state["current_ref"] = verse.get("ref"); st.session_state["cv_data"] = {"ref": verse.get("ref"), "text": verse.get("text"), "o_chunks": chunks, "tokens": tokens}
-                st.session_state[f"pts_awarded_{key}"] = False; st.session_state[f"start_time_{key}"] = time.time()
+            key_base_learn = f"{current_language}_{actual_title}_{verse.get('ref', idx)}" # Eindeutiger Key
+            if f"s_chunks_{key_base_learn}" not in st.session_state or st.session_state.get("current_ref") != verse.get("ref"):
+                st.session_state[f"s_chunks_{key_base_learn}"]=random.sample(chunks,n_chunks); st.session_state[f"sel_chunks_{key_base_learn}"]=[]
+                st.session_state[f"used_chunks_{key_base_learn}"]=[False]*n_chunks; st.session_state[f"feedback_{key_base_learn}"]=False
+                st.session_state["current_ref"]=verse.get("ref"); st.session_state["cv_data"]={"ref":verse.get("ref"),"text":verse.get("text"),"o_chunks":chunks,"tokens":tokens}
+                st.session_state[f"pts_awarded_{key_base_learn}"]=False; st.session_state[f"start_time_{key_base_learn}"]=time.time()
 
-            s_chunks = st.session_state[f"s_chunks_{key}"]
-            sel_chunks = st.session_state[f"sel_chunks_{key}"]
-            used = st.session_state[f"used_chunks_{key}"]
-            feedback = st.session_state.get(f"feedback_{key}", False)
-            pts_awarded = st.session_state.get(f"pts_awarded_{key}", False)
-
+            s_chunks = st.session_state[f"s_chunks_{key_base_learn}"]
+            sel_chunks = st.session_state[f"sel_chunks_{key_base_learn}"]
+            used = st.session_state[f"used_chunks_{key_base_learn}"]
+            
             st.markdown(f"### {VERSE_EMOJI} {verse.get('ref')}")
             
             btn_idx = 0
@@ -483,104 +581,101 @@ if st.session_state.logged_in_user:
                 for c in range(COLS_PER_ROW):
                     if btn_idx < n_chunks:
                         disp_idx = btn_idx; txt = s_chunks[disp_idx]; is_used = used[disp_idx]
-                        btn_key = f"btn_v5_{disp_idx}_{key}"
+                        btn_key = f"btn_v7_{disp_idx}_{key_base_learn}"
                         with cols[c]:
-                            if is_used: st.button(f"~~{txt}~~", key=btn_key, disabled=True, use_container_width=True)
+                            if is_used: st.button(f"~~{txt}~~",key=btn_key,disabled=True,use_container_width=True)
                             else:
-                                if st.button(txt, key=btn_key, use_container_width=True):
-                                    sel_chunks.append((txt, disp_idx)); used[disp_idx] = True
-                                    st.session_state[f"sel_chunks_{key}"] = sel_chunks; st.session_state[f"used_chunks_{key}"] = used
-                                    if len(sel_chunks) == n_chunks: st.session_state[f"feedback_{key}"] = True
+                                if st.button(txt,key=btn_key,use_container_width=True):
+                                    sel_chunks.append((txt,disp_idx));used[disp_idx]=True
+                                    st.session_state[f"sel_chunks_{key_base_learn}"]=sel_chunks;st.session_state[f"used_chunks_{key_base_learn}"]=used
+                                    if len(sel_chunks)==n_chunks:st.session_state[f"feedback_{key_base_learn}"]=True
                                     st.rerun()
                         btn_idx += 1
-            st.markdown("---")
-            cols_sel = st.columns([5,1])
+            st.markdown("---"); cols_sel = st.columns([5,1])
             with cols_sel[0]: st.markdown(f"```{' '.join([i[0] for i in sel_chunks]) if sel_chunks else '*Auswählen...*'}```")
             with cols_sel[1]:
-                 if st.button("↩️", key=f"undo_v5_{key}", help="Zurück", disabled=not sel_chunks):
+                 if st.button("↩️",key=f"undo_v7_{key_base_learn}",help="Zurück",disabled=not sel_chunks):
                       if sel_chunks:
-                          _, orig_idx = sel_chunks.pop(); used[orig_idx] = False
-                          st.session_state[f"sel_chunks_{key}"] = sel_chunks; st.session_state[f"used_chunks_{key}"] = used
-                          if st.session_state.get(f"feedback_{key}",False) and len(sel_chunks)<n_chunks: st.session_state[f"feedback_{key}"] = False
+                          _,orig_idx=sel_chunks.pop();used[orig_idx]=False
+                          st.session_state[f"sel_chunks_{key_base_learn}"]=sel_chunks;st.session_state[f"used_chunks_{key_base_learn}"]=used
+                          if st.session_state.get(f"feedback_{key_base_learn}",False) and len(sel_chunks)<n_chunks:st.session_state[f"feedback_{key_base_learn}"]=False
                           st.rerun()
             st.markdown("---")
 
-            feedback = st.session_state.get(f"feedback_{key}", False) # Erneut holen
+            feedback = st.session_state.get(f"feedback_{key_base_learn}", False)
             if feedback:
-                u_chunks = [i[0] for i in sel_chunks]; u_text = " ".join(u_chunks)
-                cv_data = st.session_state.get("cv_data", {}); correct_txt = cv_data.get("text", ""); correct_chunks = cv_data.get("o_chunks", [])
-                tokens_count = len(cv_data.get("tokens", [])); is_correct = (u_text == correct_txt)
+                u_chunks=[i[0] for i in sel_chunks];u_text=" ".join(u_chunks)
+                cv_data=st.session_state.get("cv_data",{});correct_txt=cv_data.get("text","");correct_chunks=cv_data.get("o_chunks",[])
+                tokens_count=len(cv_data.get("tokens",[]));is_correct=(u_text==correct_txt)
 
                 if is_correct:
-                    if not pts_awarded: # Nur einmal Punkte/Stats pro erfolgreichem Aufruf dieses Verses
-                        st.success("✅ Richtig!") # Erfolgsmeldung verschoben
+                    pts_awarded = st.session_state.get(f"pts_awarded_{key_base_learn}", False)
+                    is_last_verse = (idx == total_verses - 1)
+                    
+                    if not pts_awarded: # Punkte und Stats nur einmalig
                         users[username]["points"] = users[username].get("points",0) + tokens_count
-                        start = st.session_state.get(f"start_time_{key}", time.time()); duration = time.time() - start
+                        start = st.session_state.get(f"start_time_{key_base_learn}", time.time()); duration = time.time() - start
                         users[username]['learning_time_seconds'] += int(duration); users[username]['total_verses_learned'] += 1
                         users[username]['total_words_learned'] += tokens_count
                         team_id = users[username].get('team_id')
                         if team_id and team_id in teams: teams[team_id]['points'] = teams[team_id].get('points',0) + tokens_count; save_teams(teams)
-                        save_users(users); st.session_state[f"pts_awarded_{key}"] = True; st.balloons()
-                    else: # Wenn schon Punkte vergeben wurden, nur die Erfolgsmeldung
-                         st.success("✅ Richtig!")
-
+                        save_users(users); st.session_state[f"pts_awarded_{key_base_learn}"] = True
+                    
+                    st.success("✅ Richtig!") # Erfolgsmeldung immer anzeigen
                     st.markdown(f"<div style='background-color:#e6ffed; color:#094d21; padding:10px; border-radius:5px;'><b>{correct_txt}</b></div>", unsafe_allow_html=True)
-                    
-                    # --- PERSISTENZ nach KORREKTER Antwort (Optimiert) ---
-                    force_rerun_on_complete = False
-                    if not is_public and actual_title in user_verses_private:
-                        _latest_verses = load_user_verses(username, current_language)
-                        if actual_title in _latest_verses:
-                            details = _latest_verses[actual_title] # Direkte Referenz
-                            persist_needed = False
+
+                    # --- PERSISTENZ & COMPLETION ---
+                    text_completed_this_turn = False
+                    current_text_details_for_save = None
+
+                    if actual_title in user_verses_private: # Nur für Texte im User-Profil (private oder kopierte öffentliche)
+                        _latest_user_verses = load_user_verses(username, current_language) # Immer frische Daten laden
+                        if actual_title in _latest_user_verses:
+                            current_text_details_for_save = _latest_user_verses[actual_title] # Direkte Referenz für Modifikation
+
                             if mode == 'linear':
-                                if idx == total_verses - 1: # Letzter Vers abgeschlossen
-                                    if not details.get("completed_linear", False):
-                                        details["completed_linear"] = True; details["last_index"] = 0
-                                        st.session_state[f"completed_msg_shown_{current_language}_{actual_title}"] = False
-                                        completed = True # Update UI flag for next run check
-                                        persist_needed = True; force_rerun_on_complete = True
-                                elif not details.get("completed_linear"): # Normaler linearer Fortschritt
-                                    details["last_index"] = (idx + 1) % total_verses
-                                    persist_needed = True
-                            # Random mode wird unten gespeichert
-                            if persist_needed:
-                                persist_current_private_text_progress(username, current_language, actual_title, details)
+                                if is_last_verse:
+                                    if not current_text_details_for_save.get("completed_linear", False):
+                                        current_text_details_for_save["completed_linear"] = True
+                                        current_text_details_for_save["last_index"] = 0 
+                                        st.session_state[f"completed_msg_shown_{current_language}_{actual_title}"] = False # Damit Meldung neu kommt
+                                        completed = True # Für UI-Update in diesem Lauf (Balken)
+                                        text_completed_this_turn = True
+                                        st.success("Super Big Amen! Text abgeschlossen!")
+                                        if not pts_awarded: st.balloons() # Ballons nur wenn auch Punkte vergeben
+                                elif not current_text_details_for_save.get("completed_linear"): # Normaler Fortschritt
+                                    current_text_details_for_save["last_index"] = (idx + 1) % total_verses
+                            
+                            persist_user_text_progress(username, current_language, actual_title, current_text_details_for_save)
 
-                    if force_rerun_on_complete: # Bei Abschluss SOFORT neu laden
-                        # Clear state for current verse before rerun
-                        for k_del in list(st.session_state.keys()):
-                             if key in k_del or k_del in ["current_ref", "cv_data"]: del st.session_state[k_del]
-                        st.rerun()
+                    # --- Auto-Advance Handling (MODIFIED) ---
+                    if not is_last_verse: # Nur auto-advancen, wenn NICHT der letzte Vers war
+                        st.markdown("➡️ Nächster Vers...")
+                        time.sleep(AUTO_ADVANCE_DELAY)
+                    # Ansonsten (letzter Vers) wird der Timer übersprungen, Meldung wurde oben angezeigt
                     
-                    # Normaler Auto-Advance
-                    st.markdown("➡️ Nächster Vers...")
-                    time.sleep(AUTO_ADVANCE_DELAY) 
+                    # --- Finales Speichern (Random) & Rerun ---
+                    next_idx_ui_final = idx # Für UI-Update
+                    if actual_title in user_verses_private and mode == 'random': # Random-Fortschritt immer für User-Texte speichern
+                        _final_verses_rand = load_user_verses(username, current_language)
+                        if actual_title in _final_verses_rand:
+                            final_details_rand = _final_verses_rand[actual_title]
+                            rand_key_final = f"{current_language}_{actual_title}"
+                            pos = st.session_state.get(f'random_pass_current_position_{rand_key_final}', 0)
+                            shown = st.session_state.get(f'random_pass_shown_count_{rand_key_final}',0)
+                            order = st.session_state.get(f'random_pass_indices_order_{rand_key_final}',[])
+                            if pos < len(order): st.session_state[f'random_pass_shown_count_{rand_key_final}'] = shown + 1
+                            st.session_state[f'random_pass_current_position_{rand_key_final}'] = pos + 1
+                            persist_user_text_progress(username, current_language, actual_title, final_details_rand)
                     
-                    # Finaler Fortschritt und UI Update VOR Rerun
-                    next_idx_ui = idx
-                    if not is_public and actual_title in user_verses_private:
-                        _final_verses = load_user_verses(username, current_language) # Letzten Stand holen
-                        if actual_title in _final_verses:
-                            final_details = _final_verses[actual_title]
-                            if mode == 'linear': next_idx_ui = final_details.get("last_index", 0)
-                            elif mode == 'random':
-                                rand_key_final = f"{current_language}_{actual_title}"
-                                pos = st.session_state.get(f'random_pass_current_position_{rand_key_final}', 0)
-                                shown = st.session_state.get(f'random_pass_shown_count_{rand_key_final}',0)
-                                order = st.session_state.get(f'random_pass_indices_order_{rand_key_final}',[])
-                                if pos < len(order): st.session_state[f'random_pass_shown_count_{rand_key_final}'] = shown + 1
-                                st.session_state[f'random_pass_current_position_{rand_key_final}'] = pos + 1
-                                persist_current_private_text_progress(username, current_language, actual_title, final_details) # Random state sichern
-                                next_idx_ui = idx # Random idx wird oben neu bestimmt
-                    elif mode == 'linear': next_idx_ui = (idx + 1) % total_verses
+                    if mode == 'linear': # UI Index für nächsten Lauf setzen
+                        next_idx_ui_final = 0 if is_last_verse else (idx + 1) % total_verses
                     
-                    st.session_state[idx_key] = next_idx_ui # Setze Index für nächsten Lauf
+                    st.session_state[idx_key] = next_idx_ui_final 
 
-                    # Cleanup verse-specific states
                     for k_del in list(st.session_state.keys()):
-                         if key in k_del or k_del in ["current_ref", "cv_data"]: del st.session_state[k_del]
-                    st.rerun()
+                         if key_base_learn in k_del or k_del in ["current_ref", "cv_data"]: del st.session_state[k_del]
+                    st.rerun() # Immer Rerun nach korrekt
 
                 else: # Falsche Antwort
                     st.error("❌ Leider falsch.")
@@ -589,58 +684,56 @@ if st.session_state.logged_in_user:
                     st.markdown(f"<div style='background-color:#ffebeb; color:#8b0000; padding:10px; border-radius:5px;'>{highlighted}</div>", unsafe_allow_html=True)
                     st.markdown("<b>Korrekt wäre:</b>", unsafe_allow_html=True)
                     st.markdown(f"<div style='background-color:#e6ffed; color:#094d21; padding:10px; border-radius:5px;'>{correct_txt}</div>", unsafe_allow_html=True)
-                    st.session_state[f"pts_awarded_{key}"] = False
+                    st.session_state[f"pts_awarded_{key_base_learn}"] = False
 
                     cols_fb = st.columns([1,1.5,1])
                     with cols_fb[0]: 
                         show_prev = (mode == 'linear' and total_verses > 1 and idx > 0)
-                        if st.button("⬅️ Zurück", key=f"prev_v5_{key}", disabled=not show_prev, use_container_width=True):
+                        if st.button("⬅️ Zurück", key=f"prev_v7_{key_base_learn}", disabled=not show_prev, use_container_width=True):
                             next_idx_prev = idx - 1
-                            if not is_public and actual_title in user_verses_private and mode == 'linear':
+                            if actual_title in user_verses_private and mode == 'linear':
                                 details = load_user_verses(username, current_language).get(actual_title, {}).copy()
-                                if details: details["last_index"] = next_idx_prev; persist_current_private_text_progress(username, current_language, actual_title, details)
+                                if details: details["last_index"] = next_idx_prev; persist_user_text_progress(username, current_language, actual_title, details)
                             st.session_state[idx_key] = next_idx_prev
-                            for k_del in list(st.session_state.keys()): # Reset state
-                                 if key in k_del or k_del in ["current_ref", "cv_data"]: del st.session_state[k_del]
+                            for k_del in list(st.session_state.keys()):
+                                 if key_base_learn in k_del or k_del in ["current_ref", "cv_data"]: del st.session_state[k_del]
                             st.rerun()
                     with cols_fb[2]: 
-                        if st.button("➡️ Nächster", key=f"next_v5_{key}", use_container_width=True):
-                            next_idx_ui = idx 
-                            if not is_public and actual_title in user_verses_private:
+                        if st.button("➡️ Nächster", key=f"next_v7_{key_base_learn}", use_container_width=True):
+                            next_idx_ui_next = idx 
+                            if actual_title in user_verses_private: # Gilt für private und kopierte öffentliche
                                 details = load_user_verses(username, current_language).get(actual_title, {}).copy()
                                 if details:
-                                    if mode == 'linear': next_idx_ui = (idx + 1) % total_verses; details["last_index"] = next_idx_ui
+                                    if mode == 'linear': next_idx_ui_next = (idx + 1) % total_verses; details["last_index"] = next_idx_ui_next
                                     elif mode == 'random': 
                                         rand_key_fb = f"{current_language}_{actual_title}"; pos = st.session_state.get(f'random_pass_current_position_{rand_key_fb}', 0)
                                         shown = st.session_state.get(f'random_pass_shown_count_{rand_key_fb}',0); order = st.session_state.get(f'random_pass_indices_order_{rand_key_fb}',[])
-                                        if pos < len(order): st.session_state[f'random_pass_shown_count_{rand_key_fb}'] = shown + 1 # Zählen als gezeigt, auch wenn falsch
-                                        st.session_state[f'random_pass_current_position_{rand_key_fb}'] = pos + 1; next_idx_ui = idx # UI bleibt
-                                    persist_current_private_text_progress(username, current_language, actual_title, details)
-                            elif mode == 'linear': next_idx_ui = (idx + 1) % total_verses
-                            st.session_state[idx_key] = next_idx_ui
-                            for k_del in list(st.session_state.keys()): # Reset state
-                                 if key in k_del or k_del in ["current_ref", "cv_data"]: del st.session_state[k_del]
+                                        if pos < len(order): st.session_state[f'random_pass_shown_count_{rand_key_fb}'] = shown + 1
+                                        st.session_state[f'random_pass_current_position_{rand_key_fb}'] = pos + 1; next_idx_ui_next = idx 
+                                    persist_user_text_progress(username, current_language, actual_title, details)
+                            elif mode == 'linear': next_idx_ui_next = (idx + 1) % total_verses # Für rein öffentliche Texte ohne User-Kopie
+                            st.session_state[idx_key] = next_idx_ui_next
+                            for k_del in list(st.session_state.keys()):
+                                 if key_base_learn in k_del or k_del in ["current_ref", "cv_data"]: del st.session_state[k_del]
                             st.rerun()
 else: # Nicht eingeloggt
     st.sidebar.title("🔐 Anmeldung"); login_tab, register_tab = st.sidebar.tabs(["Login", "Registrieren"])
     with login_tab:
-        st.subheader("Login")
-        login_user = st.text_input("Benutzername", key="li_user_v6")
-        login_pw = st.text_input("Passwort", type="password", key="li_pw_v6")
-        if st.button("Login", key="li_btn_v6"):
+        st.subheader("Login"); login_user = st.text_input("Benutzername", key="li_user_v8")
+        login_pw = st.text_input("Passwort", type="password", key="li_pw_v8")
+        if st.button("Login", key="li_btn_v8"):
             user_data = users.get(login_user)
             if user_data and verify_password(user_data.get("password_hash", ""), login_pw):
                 st.session_state.logged_in_user = login_user; st.session_state.login_error = None
                 if "register_error" in st.session_state: del st.session_state.register_error
-                st.session_state.selected_language = DEFAULT_LANGUAGE; st.rerun()
+                st.session_state.selected_language = DEFAULT_LANGUAGE; st.session_state.admin_logged_in = False; st.rerun()
             else: st.session_state.login_error = "Name/Passwort ungültig."
             if st.session_state.login_error : st.error(st.session_state.login_error)
     with register_tab:
-        st.subheader("Registrieren")
-        reg_user = st.text_input("Benutzername", key="reg_user_v6")
-        reg_pw = st.text_input("Passwort (min. 6 Z.)", type="password", key="reg_pw_v6")
-        reg_confirm = st.text_input("Passwort bestätigen", type="password", key="reg_confirm_v6")
-        if st.button("Registrieren", key="reg_btn_v6"):
+        st.subheader("Registrieren"); reg_user = st.text_input("Benutzername", key="reg_user_v8")
+        reg_pw = st.text_input("Passwort (min. 6 Z.)", type="password", key="reg_pw_v8")
+        reg_confirm = st.text_input("Passwort bestätigen", type="password", key="reg_confirm_v8")
+        if st.button("Registrieren", key="reg_btn_v8"):
             if not reg_user or not reg_pw or not reg_confirm: st.session_state.register_error = "Alle Felder ausfüllen."
             elif reg_pw != reg_confirm: st.session_state.register_error = "Passwörter ungleich."
             elif reg_user in users: st.session_state.register_error = "Name vergeben."
@@ -650,7 +743,8 @@ else: # Nicht eingeloggt
                  users[reg_user] = {"password_hash": pw_hash, "points": 0, "team_id": None, "learning_time_seconds": 0, "total_verses_learned": 0, "total_words_learned": 0}
                  save_users(users); st.session_state.logged_in_user = reg_user; st.session_state.register_error = None
                  if "login_error" in st.session_state: del st.session_state.login_error
-                 st.session_state.selected_language = DEFAULT_LANGUAGE; st.success("Registriert & angemeldet!"); st.rerun()
+                 st.session_state.selected_language = DEFAULT_LANGUAGE; st.session_state.admin_logged_in = False; 
+                 st.success("Registriert & angemeldet!"); st.rerun()
             if st.session_state.register_error : st.error(st.session_state.register_error)
     st.title("📖 Vers-Lern-App")
     st.markdown("Bitte melde dich an oder registriere dich.")
