@@ -1,101 +1,103 @@
 {
-  "Ephesians 1": {
-    "verses": [
-      {
-        "ref": "Eph. 1:1",
-        "text": "Paul, an apostle of Christ Jesus through the will of God, to the saints who are in Ephesus and are faithful in Christ Jesus:"
-      },
-      {
-        "ref": "Eph. 1:2",
-        "text": "Grace to you and peace from God our Father and the Lord Jesus Christ."
-      },
-      {
-        "ref": "Eph. 1:3",
-        "text": "Blessed be the God and Father of our Lord Jesus Christ, who has blessed us with every spiritual blessing in the heavenlies in Christ,"
-      },
-      {
-        "ref": "Eph. 1:4",
-        "text": "Even as He chose us in Him before the foundation of the world to be holy and without blemish before Him in love,"
-      },
-      {
-        "ref": "Eph. 1:5",
-        "text": "Predestinating us unto sonship through Jesus Christ to Himself, according to the good pleasure of His will,"
-      },
-      {
-        "ref": "Eph. 1:6",
-        "text": "To the praise of the glory of His grace, with which He graced us in the Beloved;"
-      },
-      {
-        "ref": "Eph. 1:7",
-        "text": "In whom we have redemption through His blood, the forgiveness of offenses, according to the riches of His grace,"
-      },
-      {
-        "ref": "Eph. 1:8",
-        "text": "Which He caused to abound to us in all wisdom and prudence,"
-      },
-      {
-        "ref": "Eph. 1:9",
-        "text": "Making known to us the mystery of His will according to His good pleasure, which He purposed in Himself,"
-      },
-      {
-        "ref": "Eph. 1:10",
-        "text": "Unto the economy of the fullness of the times, to head up all things in Christ, the things in the heavens and the things on the earth, in Him;"
-      },
-      {
-        "ref": "Eph. 1:11",
-        "text": "In whom also we were designated as an inheritance, having been predestinated according to the purpose of the One who works all things according to the counsel of His will,"
-      },
-      {
-        "ref": "Eph. 1:12",
-        "text": "That we would be to the praise of His glory who have first hoped in Christ."
-      },
-      {
-        "ref": "Eph. 1:13",
-        "text": "In whom you also, having heard the word of the truth, the gospel of your salvation, in Him also believing, you were sealed with the Holy Spirit of the promise,"
-      },
-      {
-        "ref": "Eph. 1:14",
-        "text": "Who is the pledge of our inheritance unto the redemption of the acquired possession, to the praise of His glory."
-      },
-      {
-        "ref": "Eph. 1:15",
-        "text": "Therefore I also, having heard of the faith in the Lord Jesus which is among you and your love to all the saints,"
-      },
-      {
-        "ref": "Eph. 1:16",
-        "text": "Do not cease giving thanks for you, making mention of you in my prayers,"
-      },
-      {
-        "ref": "Eph. 1:17",
-        "text": "That the God of our Lord Jesus Christ, the Father of glory, may give to you a spirit of wisdom and revelation in the full knowledge of Him,"
-      },
-      {
-        "ref": "Eph. 1:18",
-        "text": "The eyes of your heart having been enlightened, that you may know what is the hope of His calling,"
-      },
-      {
-        "ref": "Eph. 1:19",
-        "text": "And what is the surpassing greatness of His power toward us who believe, according to the operation of the might of His strength,"
-      },
-      {
-        "ref": "Eph. 1:20",
-        "text": "Which He caused to operate in Christ in raising Him from the dead and seating Him at His right hand in the heavenlies,"
-      },
-      {
-        "ref": "Eph. 1:21",
-        "text": "Far above all rule and authority and power and lordship and every name that is named not only in this age but also in that which is to come;"
-      },
-      {
-        "ref": "Eph. 1:22",
-        "text": "And He subjected all things under His feet and gave Him to be Head over all things to the church,"
-      },
-      {
-        "ref": "Eph. 1:23",
-        "text": "Which is His Body, the fullness of the One who fills all in all."
-      }
-    ],
-    "public": true,
-    "added_by": "Ben"
+  "DE": {
+    "Eph 1": {
+      "verses": [
+        {
+          "ref": "Epheser 1:1",
+          "text": "Paulus, ein Apostel Christi Jesu durch den Willen Gottes, an die Heiligen, die in Ephesus sind und die treu sind in Christus Jesus:"
+        },
+        {
+          "ref": "Epheser 1:2",
+          "text": "Gnade euch und Friede von Gott, unserem Vater, und dem Herrn Jesus Christus."
+        },
+        {
+          "ref": "Epheser 1:3",
+          "text": "Gesegnet sei der Gott und Vater unseres Herrn Jesus Christus, der uns mit jedem geistlichen Segen gesegnet hat im Himmlischen in Christus,"
+        },
+        {
+          "ref": "Epheser 1:4",
+          "text": "So wie Er uns in Ihm vor Grundlegung der Welt auserwählt hat, damit wir heilig und makellos seien vor Ihm ein Liebe,"
+        },
+        {
+          "ref": "Epheser 1:5",
+          "text": "indem Er uns durch Jesus Christus für Sich zur Sohnschaft vorherbestimmt hat, nach dem Wohlgefallen Seines Willens,"
+        },
+        {
+          "ref": "Epheser 1:6",
+          "text": "zum Lobpreis der Herrlichkeit Seiner Gnade, mit der Er uns in dem Geliebten begnadet hat,"
+        },
+        {
+          "ref": "Epheser 1:7",
+          "text": "in Ihm haben wir die Erlösung durch Sein Blut, die Vergebung der Verfehlungen nach dem Reichtum Seiner Gnade,"
+        },
+        {
+          "ref": "Epheser 1:8",
+          "text": "die Er in aller Weisheit und Klugheit zu uns hat überströmen lassen,"
+        },
+        {
+          "ref": "Epheser 1:9",
+          "text": "indem Er uns das Geheimnis Seines Willens wissen ließ nach Seinem Wohlgefallen, das Er Sich in Sich Selbst vorgesetzt hat,"
+        },
+        {
+          "ref": "Epheser 1:10",
+          "text": "zur Ökonomie der Fülle der Zeiten, um in Christus alle Dinge aufzuhaupten, die Dinge in den Himmeln und die Dinge auf der Erde, in Ihm,"
+        },
+        {
+          "ref": "Epheser 1:11",
+          "text": "in dem wir auch als Erbteil bestimmt wurden, nachdem wir vorherbestimmt worden sind nach dem Vorsatz dessen, der alles nach dem Ratschluss Seines Willens wirkt,"
+        },
+        {
+          "ref": "Epheser 1:12",
+          "text": "damit wir zum Lobpreis Seiner Herrlichkeit seien, die wir zuerst auf Christus gehofft haben,"
+        },
+        {
+          "ref": "Epheser 1:13",
+          "text": "in dem auch ihr, nachdem ihr das Wort der Wahrheit, das Evangelium von eurer Errettung, gehört habt, auch an Ihn geglaubt habt, mit dem Heiligen Geist der Verheißung versiegelt worden seid,"
+        },
+        {
+          "ref": "Epheser 1:14",
+          "text": "der das Unterpfand unseres Erbteils ist zur Erlösung des erworbenen Besitzes, zum Lobpreis Seiner Herrlichkeit."
+        },
+        {
+          "ref": "Epheser 1:15",
+          "text": "Deswegen, auch ich, nachdem ich von dem Glauben an den Herrn Jesus gehört habe, der unter euch ist, und von eurer Liebe zu allen Heiligen,"
+        },
+        {
+          "ref": "Epheser 1:16",
+          "text": "höre ich nicht auf, für euch zu danken, wenn ich euch in meinen Gebeten erwähne,"
+        },
+        {
+          "ref": "Epheser 1:17",
+          "text": "dass der Gott unseres Herrn Jesus Christus, der Vater der Herrlichkeit, euch einen Geist der Weisheit und Offenbarung gebe in der völligen Erkenntnis Seiner Selbst,"
+        },
+        {
+          "ref": "Epheser 1:18",
+          "text": "nachdem die Augen eures Herzens erleuchtet worden sind, damit ihr wisst, was die Hoffnung Seiner Berufung ist, und was der Reichtum der Herrlichkeit Seines Erbteils in den Heiligen ist"
+        },
+        {
+          "ref": "Epheser 1:19",
+          "text": "und was die überragende Größe Seiner Kraft an, uns ist, die wir glauben, nach der Wirksamkeit der Macht Seiner Stärke,"
+        },
+        {
+          "ref": "Epheser 1:20",
+          "text": "die Er in Christus wirken ließ, als Er Ihn von den Toten auferweckte und Ihn zu Seiner Rechten niedersetzte im Himmlischen,"
+        },
+        {
+          "ref": "Epheser 1:21",
+          "text": "hoch über jedem Fürstentum und jeder Gewalt und Macht und Herrschaft und jedem Namen, der genannt wird, nicht nur in diesem Zeitalter, sondern auch in dem, das kommen soll;"
+        },
+        {
+          "ref": "Epheser 1:22",
+          "text": "und Er hat alles Seinen Füßen unterworfen und hat Ihm gegeben, Haupt über alles zu sein, der Gemeinde,"
+        },
+        {
+          "ref": "Epheser 1:23",
+          "text": "die Sein Leib ist, die Fülle dessen, der alles in allem erfüllt."
+        }
+      ],
+      "public": true,
+      "language": "DE"
+    }
   },
   "EN": {
     "Eph 1": {
@@ -194,294 +196,21 @@
         }
       ],
       "public": true,
-      "added_by": "Ben",
       "language": "EN"
     },
-    "Col 3": {
+    "Eph 1:1-2": {
       "verses": [
         {
-          "ref": "Col. 3:1",
-          "text": "If therefore you were raised together with Christ, seek the things which are above, where Christ is, sitting at the right hand of God."
+          "ref": "Eph. 1:1",
+          "text": "Paul, an apostle of Christ Jesus through the will of God, to the saints who are in Ephesus and are faithful in Christ Jesus:"
         },
         {
-          "ref": "Col. 3:2",
-          "text": "Set your mind on the things which are above, not on the things which are on the earth."
-        },
-        {
-          "ref": "Col. 3:3",
-          "text": "For you died, and your life is hidden with Christ in God."
-        },
-        {
-          "ref": "Col. 3:4",
-          "text": "When Christ our life is manifested, then you also will be manifested with Him in glory."
-        },
-        {
-          "ref": "Col. 3:5",
-          "text": "Put to death therefore your members which are on the earth: fornication, uncleanness, passion, evil desire, and greediness, which is idolatry;"
-        },
-        {
-          "ref": "Col. 3:6",
-          "text": "Because of which things the wrath of God is coming upon the sons of disobedience;"
-        },
-        {
-          "ref": "Col. 3:7",
-          "text": "In which you also once walked, when you lived in these things."
-        },
-        {
-          "ref": "Col. 3:8",
-          "text": "But now, you also, put away all these things: wrath, anger, malice, blasphemy, foul abusive language out of your mouth."
-        },
-        {
-          "ref": "Col. 3:9",
-          "text": "Do not lie to one another, since you have put off the old man with his practices"
-        },
-        {
-          "ref": "Col. 3:10",
-          "text": "And have put on the new man, which is being renewed unto full knowledge according to the image of Him who created him,"
-        },
-        {
-          "ref": "Col. 3:11",
-          "text": "Where there cannot be Greek and Jew, circumcision and uncircumcision, barbarian, Scythian, slave, free man, but Christ is all and in all."
-        },
-        {
-          "ref": "Col. 3:12",
-          "text": "Put on therefore, as God’s chosen ones, holy and beloved, inward parts of compassion, kindness, lowliness, meekness, long-suffering;"
-        },
-        {
-          "ref": "Col. 3:13",
-          "text": "Bearing one another and forgiving one another, if anyone should have a complaint against anyone; even as the Lord forgave you, so also should you forgive."
-        },
-        {
-          "ref": "Col. 3:14",
-          "text": "And over all these things put on love, which is the uniting bond of perfectness."
-        },
-        {
-          "ref": "Col. 3:15",
-          "text": "And let the peace of Christ arbitrate in your hearts, to which also you were called in one Body; and be thankful."
-        },
-        {
-          "ref": "Col. 3:16",
-          "text": "Let the word of Christ dwell in you richly in all wisdom, teaching and admonishing one another with psalms and hymns and spiritual songs, singing with grace in your hearts to God."
-        },
-        {
-          "ref": "Col. 3:17",
-          "text": "And whatever you do in word or in deed, do all things in the name of the Lord Jesus, giving thanks to God the Father through Him."
-        },
-        {
-          "ref": "Col. 3:18",
-          "text": "Wives, be subject to your husbands, as is fitting in the Lord."
-        },
-        {
-          "ref": "Col. 3:19",
-          "text": "Husbands, love your wives and do not be bitter against them."
-        },
-        {
-          "ref": "Col. 3:20",
-          "text": "Children, obey your parents in all things, for this is well pleasing in the Lord."
-        },
-        {
-          "ref": "Col. 3:21",
-          "text": "Fathers, do not vex your children, that they may not be disheartened."
-        },
-        {
-          "ref": "Col. 3:22",
-          "text": "Slaves, obey in all things those who are your masters according to the flesh, not with eye-service as men-pleasers, but in singleness of heart fearing the Lord."
-        },
-        {
-          "ref": "Col. 3:23",
-          "text": "Whatever you do, work from the soul as to the Lord and not to men,"
-        },
-        {
-          "ref": "Col. 3:24",
-          "text": "Knowing that from the Lord you will receive the inheritance as recompense. You serve the Lord Christ."
-        },
-        {
-          "ref": "Col. 3:25",
-          "text": "For he who does unrighteously will receive what he unrighteously did, and there is no respect of persons."
+          "ref": "Eph. 1:2",
+          "text": "Grace to you and peace from God our Father and the Lord Jesus Christ."
         }
       ],
       "public": true,
-      "added_by": "Ben",
       "language": "EN"
-    },
-    "Col 3-short": {
-      "verses": [
-        {
-          "ref": "Col. 3:2",
-          "text": "Set your mind on the things which are above, not on the things which are on the earth."
-        },
-        {
-          "ref": "Col. 3:3",
-          "text": "For you died, and your life is hidden with Christ in God."
-        }
-      ],
-      "public": true,
-      "added_by": "Ben",
-      "language": "EN"
-    }
-  },
-  "DE": {
-    "Mt 1": {
-      "verses": [
-        {
-          "ref": "Matthäus 1:1",
-          "text": "Das Buch der Abstammung Jesu Christi, des Sohnes Davids, des Sohnes Abrahams:"
-        },
-        {
-          "ref": "Matthäus 1:2",
-          "text": "Abraham zeugte Isaak, und Isaak zeugte Jakob, und Jakob zeugte Juda und seine Brüder,"
-        },
-        {
-          "ref": "Matthäus 1:3",
-          "text": "und Juda zeugte Phares und Zara von der Thamar, und Phares zeugte Hesrom, und Hesrom zeugte Aram,"
-        },
-        {
-          "ref": "Matthäus 1:4",
-          "text": "und Aram zeugte Aminadab, und Aminadab zeugte Naasson, und Naasson zeugte Salmon,"
-        },
-        {
-          "ref": "Matthäus 1:5",
-          "text": "und Salmon zeugte Boas von der Rahab, und Boas zeugte Obed von der Ruth, und Obed zeugte Jesse,"
-        }
-      ],
-      "public": true,
-      "added_by": "Ben",
-      "language": "DE"
-    },
-    "Mt 1-s": {
-      "verses": [
-        {
-          "ref": "Matthäus 1:1",
-          "text": "Das Buch der Abstammung Jesu Christi, des Sohnes Davids, des Sohnes Abrahams:"
-        }
-      ],
-      "public": true,
-      "added_by": "Ben",
-      "language": "DE"
-    },
-    "Mt 1-sa": {
-      "verses": [
-        {
-          "ref": "Matthäus 1:1",
-          "text": "Das Buch der Abstammung Jesu Christi, des Sohnes Davids, des Sohnes Abrahams:"
-        }
-      ],
-      "public": true,
-      "added_by": "Ben",
-      "language": "DE"
-    },
-    "Eph 1": {
-      "verses": [
-        {
-          "ref": "Epheser 1:1",
-          "text": "Paulus, ein Apostel Christi Jesu durch den Willen Gottes, an die Heiligen, die in Ephesus sind und die treu sind in Christus Jesus:"
-        },
-        {
-          "ref": "Epheser 1:2",
-          "text": "Gnade euch und Friede von Gott, unserem Vater, und dem Herrn Jesus Christus."
-        },
-        {
-          "ref": "Epheser 1:3",
-          "text": "Gesegnet sei der Gott und Vater unseres Herrn Jesus Christus, der uns mit jedem geistlichen Segen gesegnet hat im Himmlischen in Christus,"
-        },
-        {
-          "ref": "Epheser 1:4",
-          "text": "So wie Er uns in Ihm vor Grundlegung der Welt auserwählt hat, damit wir heilig und makellos seien vor Ihm ein Liebe,"
-        },
-        {
-          "ref": "Epheser 1:5",
-          "text": "indem Er uns durch Jesus Christus für Sich zur Sohnschaft vorherbestimmt hat, nach dem Wohlgefallen Seines Willens,"
-        },
-        {
-          "ref": "Epheser 1:6",
-          "text": "zum Lobpreis der Herrlichkeit Seiner Gnade, mit der Er uns in dem Geliebten begnadet hat,"
-        },
-        {
-          "ref": "Epheser 1:7",
-          "text": "in Ihm haben wir die Erlösung durch Sein Blut, die Vergebung der Verfehlungen nach dem Reichtum Seiner Gnade,"
-        },
-        {
-          "ref": "Epheser 1:8",
-          "text": "die Er in aller Weisheit und Klugheit zu uns hat überströmen lassen,"
-        },
-        {
-          "ref": "Epheser 1:9",
-          "text": "indem Er uns das Geheimnis Seines Willens wissen ließ nach Seinem Wohlgefallen, das Er Sich in Sich Selbst vorgesetzt hat,"
-        },
-        {
-          "ref": "Epheser 1:10",
-          "text": "zur Ökonomie der Fülle der Zeiten, um in Christus alle Dinge aufzuhaupten, die Dinge in den Himmeln und die Dinge auf der Erde, in Ihm,"
-        },
-        {
-          "ref": "Epheser 1:11",
-          "text": "in dem wir auch als Erbteil bestimmt wurden, nachdem wir vorherbestimmt worden sind nach dem Vorsatz dessen, der alles nach dem Ratschluss Seines Willens wirkt,"
-        },
-        {
-          "ref": "Epheser 1:12",
-          "text": "damit wir zum Lobpreis Seiner Herrlichkeit seien, die wir zuerst auf Christus gehofft haben,"
-        },
-        {
-          "ref": "Epheser 1:13",
-          "text": "in dem auch ihr, nachdem ihr das Wort der Wahrheit, das Evangelium von eurer Errettung, gehört habt, auch an Ihn geglaubt habt, mit dem Heiligen Geist der Verheißung versiegelt worden seid,"
-        },
-        {
-          "ref": "Epheser 1:14",
-          "text": "der das Unterpfand unseres Erbteils ist zur Erlösung des erworbenen Besitzes, zum Lobpreis Seiner Herrlichkeit."
-        },
-        {
-          "ref": "Epheser 1:15",
-          "text": "Deswegen, auch ich, nachdem ich von dem Glauben an den Herrn Jesus gehört habe, der unter euch ist, und von eurer Liebe zu allen Heiligen,"
-        },
-        {
-          "ref": "Epheser 1:16",
-          "text": "höre ich nicht auf, für euch zu danken, wenn ich euch in meinen Gebeten erwähne,"
-        },
-        {
-          "ref": "Epheser 1:17",
-          "text": "dass der Gott unseres Herrn Jesus Christus, der Vater der Herrlichkeit, euch einen Geist der Weisheit und Offenbarung gebe in der völligen Erkenntnis Seiner Selbst,"
-        },
-        {
-          "ref": "Epheser 1:18",
-          "text": "nachdem die Augen eures Herzens erleuchtet worden sind, damit ihr wisst, was die Hoffnung Seiner Berufung ist, und was der Reichtum der Herrlichkeit Seines Erbteils in den Heiligen ist"
-        },
-        {
-          "ref": "Epheser 1:19",
-          "text": "und was die überragende Größe Seiner Kraft an, uns ist, die wir glauben, nach der Wirksamkeit der Macht Seiner Stärke,"
-        },
-        {
-          "ref": "Epheser 1:20",
-          "text": "die Er in Christus wirken ließ, als Er Ihn von den Toten auferweckte und Ihn zu Seiner Rechten niedersetzte im Himmlischen,"
-        },
-        {
-          "ref": "Epheser 1:21",
-          "text": "hoch über jedem Fürstentum und jeder Gewalt und Macht und Herrschaft und jedem Namen, der genannt wird, nicht nur in diesem Zeitalter, sondern auch in dem, das kommen soll;"
-        },
-        {
-          "ref": "Epheser 1:22",
-          "text": "und Er hat alles Seinen Füßen unterworfen und hat Ihm gegeben, Haupt über alles zu sein, der Gemeinde,"
-        },
-        {
-          "ref": "Epheser 1:23",
-          "text": "die Sein Leib ist, die Fülle dessen, der alles in allem erfüllt."
-        }
-      ],
-      "public": true,
-      "added_by": "Ben",
-      "language": "DE"
-    },
-    "1 Joh 1-s": {
-      "verses": [
-        {
-          "ref": "Erste Johannes 1:1",
-          "text": "Was von Anfang an war, was wir gehört haben, was wir mit unseren Augen gesehen haben, was wir angeschaut und unsere Hände betastet haben, in Bezug auf das Wort des Lebens"
-        },
-        {
-          "ref": "Erste Johannes 1:2",
-          "text": "(und das Leben ist offenbar geworden, und wir haben gesehen und bezeugen und berichten euch das ewige Leben, das mit dem Vater war und uns offenbar gemacht worden ist);"
-        }
-      ],
-      "public": true,
-      "language": "DE"
     }
   }
 }

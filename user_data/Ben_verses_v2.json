@@ -1,87 +1,5 @@
 {
-  "EN": {
-    "Col 3-p": {
-      "verses": [
-        {
-          "ref": "Col. 1:1",
-          "text": "Paul, an apostle of Christ Jesus through the will of God, and Timothy the brother,"
-        },
-        {
-          "ref": "Col. 1:2",
-          "text": "To the saints in Colossae and faithful brothers in Christ: Grace to you and peace from God our Father."
-        }
-      ],
-      "mode": "linear",
-      "last_index": 1,
-      "completed_linear": true,
-      "public": false,
-      "language": "EN",
-      "random_pass_indices_order": [
-        0,
-        1
-      ],
-      "random_pass_current_position": 0,
-      "random_pass_shown_count": 0
-    }
-  },
   "DE": {
-    "Mt 16": {
-      "verses": [
-        {
-          "ref": "Matt. 16:18",
-          "text": "And I also say to you that you are Peter, and upon this rock I will build My church, and the gates of Hades shall not prevail against it."
-        },
-        {
-          "ref": "Matt. 16:19",
-          "text": "I will give to you the keys of the kingdom of the heavens, and whatever you bind on the earth shall have been bound in the heavens, and whatever you loose on the earth shall have been loosed in the heavens."
-        }
-      ],
-      "mode": "linear",
-      "last_index": 0,
-      "completed_linear": true,
-      "public": false,
-      "language": "DE",
-      "random_pass_indices_order": [
-        1,
-        0
-      ],
-      "random_pass_current_position": 0,
-      "random_pass_shown_count": 0
-    },
-    "Eph 1s": {
-      "verses": [
-        {
-          "ref": "Epheser 1:1",
-          "text": "Paulus, ein Apostel Christi Jesu durch den Willen Gottes, an die Heiligen, die in Ephesus sind und die treu sind in Christus Jesus:"
-        }
-      ],
-      "mode": "linear",
-      "last_index": 0,
-      "completed_linear": true,
-      "public": false,
-      "language": "DE"
-    },
-    "Joh 1-s": {
-      "verses": [
-        {
-          "ref": "Johannes 1:1",
-          "text": "Im Anfang war das Wort, und das Wort war bei Gott, und das Wort war Gott."
-        },
-        {
-          "ref": "Johannes 1:2",
-          "text": "Er war im Anfang bei Gott."
-        },
-        {
-          "ref": "Johannes 1:3",
-          "text": "Alle Dinge sind durch Ihn entstanden, und ohne Ihn ist nicht eines entstanden von dem, was entstanden ist."
-        }
-      ],
-      "mode": "linear",
-      "last_index": 0,
-      "completed_linear": true,
-      "public": false,
-      "language": "DE"
-    },
     "Eph 1": {
       "verses": [
         {
@@ -183,16 +101,120 @@
       "public": false,
       "original_public_source": true,
       "language": "DE"
-    },
-    "1 Joh 1-s": {
+    }
+  },
+  "EN": {
+    "Eph 1": {
       "verses": [
         {
-          "ref": "Erste Johannes 1:1",
-          "text": "Was von Anfang an war, was wir gehört haben, was wir mit unseren Augen gesehen haben, was wir angeschaut und unsere Hände betastet haben, in Bezug auf das Wort des Lebens"
+          "ref": "Eph. 1:1",
+          "text": "Paul, an apostle of Christ Jesus through the will of God, to the saints who are in Ephesus and are faithful in Christ Jesus:"
         },
         {
-          "ref": "Erste Johannes 1:2",
-          "text": "(und das Leben ist offenbar geworden, und wir haben gesehen und bezeugen und berichten euch das ewige Leben, das mit dem Vater war und uns offenbar gemacht worden ist);"
+          "ref": "Eph. 1:2",
+          "text": "Grace to you and peace from God our Father and the Lord Jesus Christ."
+        },
+        {
+          "ref": "Eph. 1:3",
+          "text": "Blessed be the God and Father of our Lord Jesus Christ, who has blessed us with every spiritual blessing in the heavenlies in Christ,"
+        },
+        {
+          "ref": "Eph. 1:4",
+          "text": "Even as He chose us in Him before the foundation of the world to be holy and without blemish before Him in love,"
+        },
+        {
+          "ref": "Eph. 1:5",
+          "text": "Predestinating us unto sonship through Jesus Christ to Himself, according to the good pleasure of His will,"
+        },
+        {
+          "ref": "Eph. 1:6",
+          "text": "To the praise of the glory of His grace, with which He graced us in the Beloved;"
+        },
+        {
+          "ref": "Eph. 1:7",
+          "text": "In whom we have redemption through His blood, the forgiveness of offenses, according to the riches of His grace,"
+        },
+        {
+          "ref": "Eph. 1:8",
+          "text": "Which He caused to abound to us in all wisdom and prudence,"
+        },
+        {
+          "ref": "Eph. 1:9",
+          "text": "Making known to us the mystery of His will according to His good pleasure, which He purposed in Himself,"
+        },
+        {
+          "ref": "Eph. 1:10",
+          "text": "Unto the economy of the fullness of the times, to head up all things in Christ, the things in the heavens and the things on the earth, in Him;"
+        },
+        {
+          "ref": "Eph. 1:11",
+          "text": "In whom also we were designated as an inheritance, having been predestinated according to the purpose of the One who works all things according to the counsel of His will,"
+        },
+        {
+          "ref": "Eph. 1:12",
+          "text": "That we would be to the praise of His glory who have first hoped in Christ."
+        },
+        {
+          "ref": "Eph. 1:13",
+          "text": "In whom you also, having heard the word of the truth, the gospel of your salvation, in Him also believing, you were sealed with the Holy Spirit of the promise,"
+        },
+        {
+          "ref": "Eph. 1:14",
+          "text": "Who is the pledge of our inheritance unto the redemption of the acquired possession, to the praise of His glory."
+        },
+        {
+          "ref": "Eph. 1:15",
+          "text": "Therefore I also, having heard of the faith in the Lord Jesus which is among you and your love to all the saints,"
+        },
+        {
+          "ref": "Eph. 1:16",
+          "text": "Do not cease giving thanks for you, making mention of you in my prayers,"
+        },
+        {
+          "ref": "Eph. 1:17",
+          "text": "That the God of our Lord Jesus Christ, the Father of glory, may give to you a spirit of wisdom and revelation in the full knowledge of Him,"
+        },
+        {
+          "ref": "Eph. 1:18",
+          "text": "The eyes of your heart having been enlightened, that you may know what is the hope of His calling,"
+        },
+        {
+          "ref": "Eph. 1:19",
+          "text": "And what is the surpassing greatness of His power toward us who believe, according to the operation of the might of His strength,"
+        },
+        {
+          "ref": "Eph. 1:20",
+          "text": "Which He caused to operate in Christ in raising Him from the dead and seating Him at His right hand in the heavenlies,"
+        },
+        {
+          "ref": "Eph. 1:21",
+          "text": "Far above all rule and authority and power and lordship and every name that is named not only in this age but also in that which is to come;"
+        },
+        {
+          "ref": "Eph. 1:22",
+          "text": "And He subjected all things under His feet and gave Him to be Head over all things to the church,"
+        },
+        {
+          "ref": "Eph. 1:23",
+          "text": "Which is His Body, the fullness of the One who fills all in all."
+        }
+      ],
+      "mode": "linear",
+      "last_index": 0,
+      "completed_linear": false,
+      "public": false,
+      "original_public_source": true,
+      "language": "EN"
+    },
+    "Eph 1:1-2": {
+      "verses": [
+        {
+          "ref": "Eph. 1:1",
+          "text": "Paul, an apostle of Christ Jesus through the will of God, to the saints who are in Ephesus and are faithful in Christ Jesus:"
+        },
+        {
+          "ref": "Eph. 1:2",
+          "text": "Grace to you and peace from God our Father and the Lord Jesus Christ."
         }
       ],
       "mode": "linear",
@@ -200,7 +222,7 @@
       "completed_linear": true,
       "public": false,
       "original_public_source": true,
-      "language": "DE"
+      "language": "EN"
     }
   }
 }
